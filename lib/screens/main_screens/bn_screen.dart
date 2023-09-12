@@ -8,6 +8,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pick_up/screens/main_screens/bn_screens/exercises_screen.dart';
 import 'package:pick_up/screens/main_screens/bn_screens/healthy_food_screen.dart';
+import 'package:pick_up/screens/main_screens/bn_screens/home_screen.dart';
+import 'package:pick_up/screens/main_screens/bn_screens/trainers_screen.dart';
 
 import '../../utils/bn_screen.dart';
 
@@ -20,8 +22,8 @@ class BNScreenScreen extends StatefulWidget {
 
 class _BNScreenScreenState extends State<BNScreenScreen> {
   final List<BnScreen> _screens = <BnScreen>[
-    const BnScreen(title: 'Home', widget: ExercisesScreen()),
-    const BnScreen(title: 'Trainers', widget: ExercisesScreen()),
+    const BnScreen(title: 'Home', widget: HomeScreen()),
+    const BnScreen(title: 'Trainers', widget: TrainersScreen()),
     const BnScreen(title: 'Exercises', widget: ExercisesScreen()),
     const BnScreen(title: 'Healthy food', widget: HealthyFoodScreen()),
   ];
@@ -107,7 +109,11 @@ class _BNScreenScreenState extends State<BNScreenScreen> {
               fontWeight: FontWeight.w500,
             ),
           ),
+          SizedBox(
+            height: 16.h,
+          ),
           _screens[_currentIndex].widget,
+          SizedBox(height: 50.h,)
         ],
       ),
     );

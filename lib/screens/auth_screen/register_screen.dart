@@ -85,15 +85,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         padding: EdgeInsets.symmetric(horizontal: 24.w),
         children: [
           SizedBox(
-            height: 30.h,
+            height: 40.h,
           ),
           Image.asset(
             'images/pickUpIcon.png',
             width: 112.w,
             height: 99.66.h,
-          ),
-          SizedBox(
-            height: 5.h,
           ),
           Text(
             'Sign up',
@@ -120,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   colorFilter: ColorFilter.mode(
                       nameFocusNode.hasFocus ||
                               nameEditingController.text.isNotEmpty
-                          ? Color(0xFFFF8D2A)
+                          ? const Color(0xFFFF8D2A)
                           : Colors.grey,
                       BlendMode.srcIn)),
             ),
@@ -201,7 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   colorFilter: ColorFilter.mode(
                       phoneFocusNode.hasFocus ||
                               phoneEditingController.text.isNotEmpty
-                          ? Color(0xFFFF8D2A)
+                          ? const Color(0xFFFF8D2A)
                           : Colors.grey,
                       BlendMode.srcIn)),
             ),
@@ -226,7 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   colorFilter: ColorFilter.mode(
                       emailFocusNode.hasFocus ||
                               emailEditingController.text.isNotEmpty
-                          ? Color(0xFFFF8D2A)
+                          ? const Color(0xFFFF8D2A)
                           : Colors.grey,
                       BlendMode.srcIn)),
             ),
@@ -252,7 +249,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   colorFilter: ColorFilter.mode(
                       passwordFocusNode.hasFocus ||
                               passwordEditingController.text.isNotEmpty
-                          ? Color(0xFFFF8D2A)
+                          ? const Color(0xFFFF8D2A)
                           : Colors.grey,
                       BlendMode.srcIn)),
             ),
@@ -284,7 +281,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       passwordConfirmFocusNode.hasFocus ||
                               passwordConfirmEditingController
                                   .text.isNotEmpty
-                          ? Color(0xFFFF8D2A)
+                          ? const Color(0xFFFF8D2A)
                           : Colors.grey,
                       BlendMode.srcIn)),
             ),
@@ -304,7 +301,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             padding:  EdgeInsets.symmetric(horizontal: 80.w),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => VerificationCode(),));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const VerificationCode(),));
               },
               style: ElevatedButton.styleFrom(
                 maximumSize: Size(178.w, 40.h),
