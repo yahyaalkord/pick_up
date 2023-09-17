@@ -36,12 +36,13 @@ class AuthApiController {
 
   Future<bool> logout() async {
     var url = Uri.parse(ApiSettings.logout);
-    var response = await http.post(url, headers: {
+    var response = await http.get(url, headers: {
       HttpHeaders.authorizationHeader:
       SharedPrefController().getValueFor<String>(key: prefKeys.token.name)!,
       HttpHeaders.acceptHeader: 'application/json',
     });
     if (response.statusCode == 200) {
+      print(222);
       SharedPrefController().clear();
       return true;
     }else{

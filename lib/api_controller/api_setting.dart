@@ -11,4 +11,7 @@ class ApiSettings {
   static const payments=_baseUrl+'content/payments';
   static const storeSubscription=_baseUrl+'content/storeSubscription';
   static const getHome=_baseUrl+'content/home';
+  static const healthyFood=_baseUrl+'content/food';
+  static const exercises=_baseUrl+'content/exercises/{id}';
+  static const getTrainerChoosee=_baseUrl+'content/getTrainerChoosee';
 }

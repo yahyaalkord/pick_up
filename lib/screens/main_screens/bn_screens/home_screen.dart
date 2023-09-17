@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pick_up/api_controller/auth_api_controller.dart';
 import 'package:pick_up/api_controller/content_api_controller.dart';
+import 'package:pick_up/prefs/shared_pref_controller.dart';
 import 'package:pick_up/screens/auth_screen/login_screen.dart';
 import 'package:pick_up/utils/api_response.dart';
 
@@ -24,24 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         children: [
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: Text(
-              'Hi, Mohammed',
-              textAlign: TextAlign.start,
-              style: GoogleFonts.tajawal(
-                color: const Color(0xFF242D68),
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          /*Row(
+          Row(
             children: [
               Align(
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
-                  'Hi, Mohammed',
+                  'Hi, ${SharedPrefController().getValueFor(key: prefKeys.name.name)}',
                   textAlign: TextAlign.start,
                   style: GoogleFonts.tajawal(
                     color: const Color(0xFF242D68),
@@ -51,15 +40,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Spacer(),
-              IconButton(onPressed: () async{
+              IconButton(
+                padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                  onPressed: () async{
+                    print('000');
                 bool apiResponse =  await AuthApiController().logout();
-                if(apiResponse){
+                if(apiResponse == true){
                   print('555');
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LogInScreen(),), (route) => false);
                 }
               }, icon: Icon(Icons.logout)),
             ],
-          ),*/
+          ),
           SizedBox(
             height: 20.h,
           ),

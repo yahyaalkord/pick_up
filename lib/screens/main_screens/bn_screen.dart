@@ -93,7 +93,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
           SizedBox(height: 40.h,),
           Container(
             width: 64.w,
-            height: 56.95.h,
+            height: 64.h,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("images/pickUpIcon.png"),
