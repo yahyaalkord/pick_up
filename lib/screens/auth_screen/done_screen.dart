@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pick_up/model/store_subscriptio_model.dart';
+import 'package:pick_up/prefs/shared_pref_controller.dart';
 import 'package:pick_up/screens/main_screens/bn_screen.dart';
 
 class DoneScreen extends StatefulWidget {
-  const DoneScreen({Key? key}) : super(key: key);
-
+  const DoneScreen({Key? key,required this.subscription}) : super(key: key);
+final StoreSubscriptionModel subscription;
   @override
   State<DoneScreen> createState() => _DoneScreenState();
 }
@@ -51,7 +53,7 @@ class _DoneScreenState extends State<DoneScreen> {
                         ),
                         SizedBox(height: 8.h,),
                         Text(
-                          '365148',
+                          widget.subscription.orderId.toString(),
                           style: GoogleFonts.tajawal(
                             color: Colors.black,
                             fontSize: 24.sp,
@@ -60,7 +62,7 @@ class _DoneScreenState extends State<DoneScreen> {
                         ),
                         SizedBox(height: 20.h,),
                         Text(
-                          'Mohammed Ali',
+                          widget.subscription.name??'',
                           style: GoogleFonts.tajawal(
                             color: Colors.black,
                             fontSize: 16.sp,
@@ -69,7 +71,7 @@ class _DoneScreenState extends State<DoneScreen> {
                         ),
                         SizedBox(height: 10.h,),
                         Text(
-                          '+9667829446318',
+                          widget.subscription.phone??'',
                           style: GoogleFonts.tajawal(
                             color: Colors.black,
                             fontSize: 16.sp,
@@ -78,7 +80,7 @@ class _DoneScreenState extends State<DoneScreen> {
                         ),
                         SizedBox(height: 10.h,),
                         Text(
-                          'moh23@gmail.com',
+                          SharedPrefController().getValueFor(key: prefKeys.email.name),
                           style: GoogleFonts.tajawal(
                             color: Colors.black,
                             fontSize: 16.sp,
@@ -94,7 +96,7 @@ class _DoneScreenState extends State<DoneScreen> {
           ),
           SizedBox(height: 62.h,),
           InkWell(
-            onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BNScreenScreen(),)),
+            onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigationBarScreen(),)),
             child: Container(
               width: 244.w,
               height: 102.h,

@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pick_up/api_controller/auth_api_controller.dart';
+import 'package:pick_up/prefs/shared_pref_controller.dart';
 import 'package:pick_up/screens/auth_screen/all_gyms_screen.dart';
 import 'package:pick_up/screens/auth_screen/register_screen.dart';
+import 'package:pick_up/screens/main_screens/bn_screen.dart';
+import 'package:pick_up/utils/api_response.dart';
+import 'package:pick_up/utils/extention.dart';
 import 'package:pick_up/widget/custom_form_text_filed.dart';
 import 'package:pick_up/widget/custom_text_field.dart';
 
@@ -19,6 +24,7 @@ class _LogInScreenState extends State<LogInScreen> {
   late TextEditingController passwordEditingController;
   late FocusNode emailFocusNode;
   late FocusNode passwordFocusNode;
+  bool tapped = false;
 
   @override
   void initState() {
@@ -82,7 +88,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     colorFilter: ColorFilter.mode(
                         emailFocusNode.hasFocus ||
                                 emailEditingController.text.isNotEmpty
-                            ? Color(0xFFFF8D2A)
+                            ? const Color(0xFFFF8D2A)
                             : Colors.grey,
                         BlendMode.srcIn)),
               ),
@@ -107,7 +113,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     colorFilter: ColorFilter.mode(
                         passwordFocusNode.hasFocus ||
                                 passwordEditingController.text.isNotEmpty
-                            ? Color(0xFFFF8D2A)
+                            ? const Color(0xFFFF8D2A)
                             : Colors.grey,
                         BlendMode.srcIn)),
               ),
@@ -118,9 +124,15 @@ class _LogInScreenState extends State<LogInScreen> {
             SizedBox(
               height: 32.h,
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AllGymsScreen(),));
+            tapped?CircularProgressIndicator():ElevatedButton(
+              onPressed: () async{
+                setState(() {
+                   tapped = true;
+                });
+                await performLogin();
+                setState(() {
+                  tapped = false;
+                });
               },
               style: ElevatedButton.styleFrom(
                 maximumSize: Size(178.w, 40.h),
@@ -152,7 +164,7 @@ class _LogInScreenState extends State<LogInScreen> {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen(),));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen(),));
               },
               child: Text.rich(
                 TextSpan(
@@ -177,11 +189,43 @@ class _LogInScreenState extends State<LogInScreen> {
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
               Align(alignment : AlignmentDirectional.bottomEnd,child: SvgPicture.asset('images/gime.svg',height: 82.h,width: 158.w,))
           ],
         ),
       ),
+    );
+  }
+
+  Future performLogin() async {
+    if (checkData()) {
+      await login();
+    }
+  }
+
+  bool checkData() {
+    if (emailEditingController.text.isNotEmpty &&
+        passwordEditingController.text.isNotEmpty) {
+      return true;
+    }
+    context.showSnackBar(
+        message: 'enter required data!', error: true);
+    return false;
+  }
+
+  Future<void> login() async {
+    ApiResponse apiResponse = await AuthApiController().login(
+      email: emailEditingController.text,
+      password: passwordEditingController.text,
+    );
+    if (apiResponse.success) {
+      SharedPrefController().getValueFor(key: prefKeys.userComplete.name)?
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => BottomNavigationBarScreen(),), (route) => false):
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => AllGymsScreen(),), (route) => false);
+    }
+    context.showSnackBar(
+      message: apiResponse.message,
+      error: !apiResponse.success,
     );
   }
 }

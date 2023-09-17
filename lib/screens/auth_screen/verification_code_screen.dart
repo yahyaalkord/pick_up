@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pick_up/api_controller/auth_api_controller.dart';
 import 'package:pick_up/screens/auth_screen/login_screen.dart';
+import 'package:pick_up/utils/api_response.dart';
+import 'package:pick_up/utils/extention.dart';
 import 'package:pick_up/widget/timer_widget.dart';
 
 class VerificationCode extends StatefulWidget {
 
-  const VerificationCode({Key? key,}) : super(key: key);
+  const VerificationCode({required this.email,Key? key,}) : super(key: key);
+  final String email;
 
   @override
   State<VerificationCode> createState() => _VerificationCodeState();
@@ -25,6 +29,7 @@ class _VerificationCodeState extends State<VerificationCode> {
   late TextEditingController _fourth;
   late TextEditingController _fifth;
   bool resendCode = false;
+  bool tapped = false;
 
   @override
   void initState() {
@@ -278,9 +283,17 @@ class _VerificationCodeState extends State<VerificationCode> {
                   ),
                 ):TimerWidget()),
             SizedBox(height: 39.h,),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LogInScreen(),), (route) => false);
+            tapped?CircularProgressIndicator():ElevatedButton(
+              onPressed: () async{
+                {
+                  setState(() {
+                    tapped = true;
+                  });
+                  await performForgetPassword();
+                  setState(() {
+                    tapped = false;
+                  });
+                }
               },
               style: ElevatedButton.styleFrom(
                 maximumSize: Size(181.w, 40.h),
@@ -356,7 +369,45 @@ class _VerificationCodeState extends State<VerificationCode> {
       ),
     );
   }
+  Future<void> performForgetPassword() async {
+    if (checkCode()) {
+      await forgetPassword();
+    }
+  }
 
+  bool checkCode() {
+    if (_first.text.isNotEmpty &&
+        _second.text.isNotEmpty &&
+        _third.text.isNotEmpty &&
+        _fourth.text.isNotEmpty) {
+      return true;
+    }else{
+
+      context.showSnackBar(message: 'Please enter the activation code!', error: true);
+      return false;
+    }
+
+  }
+
+
+  Future<void> forgetPassword() async {
+    print('in forget enter');
+    ApiResponse apiResponse = await AuthApiController().checkCode(
+      code: _first.text + _second.text + _third.text + _fourth.text,
+      email: widget.email,
+    );
+    if (apiResponse.success) {
+      context.showSnackBar(message: apiResponse.message);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LogInScreen(),
+        ),
+      );
+    }else{
+      context.showSnackBar(message: apiResponse.message,error: !apiResponse.success);
+    }
+  }
 
 
 }

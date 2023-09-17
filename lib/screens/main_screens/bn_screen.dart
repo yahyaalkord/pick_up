@@ -13,14 +13,14 @@ import 'package:pick_up/screens/main_screens/bn_screens/trainers_screen.dart';
 
 import '../../utils/bn_screen.dart';
 
-class BNScreenScreen extends StatefulWidget {
-  const BNScreenScreen({Key? key}) : super(key: key);
+class BottomNavigationBarScreen extends StatefulWidget {
+  const BottomNavigationBarScreen({Key? key}) : super(key: key);
 
   @override
-  State<BNScreenScreen> createState() => _BNScreenScreenState();
+  State<BottomNavigationBarScreen> createState() => _BottomNavigationBarScreenState();
 }
 
-class _BNScreenScreenState extends State<BNScreenScreen> {
+class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   final List<BnScreen> _screens = <BnScreen>[
     const BnScreen(title: 'Home', widget: HomeScreen()),
     const BnScreen(title: 'Trainers', widget: TrainersScreen()),
@@ -85,6 +85,7 @@ class _BNScreenScreenState extends State<BNScreenScreen> {
             },
           ),
         ),
+
       ),
       body: ListView(
         padding: EdgeInsets.zero,

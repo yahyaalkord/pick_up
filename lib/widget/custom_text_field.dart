@@ -17,6 +17,7 @@ class CustomTextField extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.suffixIcon,
     this.prefixIcon,
+    this.hintColor=0XFFBABABA,
   }) : super(key: key);
 
   final TextEditingController textEditingController;
@@ -31,6 +32,7 @@ class CustomTextField extends StatelessWidget {
   final double height;
   final TextAlign textAlign;
   final void Function()? onTap;
+  final int hintColor;
 
   @override
   Widget build(BuildContext context) {

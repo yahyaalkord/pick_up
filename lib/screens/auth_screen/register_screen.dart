@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:pick_up/api_controller/auth_api_controller.dart';
 import 'package:pick_up/screens/auth_screen/verification_code_screen.dart';
+import 'package:pick_up/utils/api_response.dart';
+import 'package:pick_up/utils/extention.dart';
 import 'package:pick_up/widget/custom_form_text_filed.dart';
 import 'package:pick_up/widget/custom_text_field.dart';
 
@@ -32,6 +36,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late FocusNode passwordConfirmFocusNode;
   bool obscure = true;
   bool obscure1 = true;
+  bool tapped = false;
+  String? _selectedDate;
 
   @override
   void initState() {
@@ -145,41 +151,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
           SizedBox(
             height: 8.h,
           ),
-          Row(
-            children: [
-              Expanded(
-                child: CustomTextField(
-                  textEditingController: birthDate1EditingController,
-                  focusNode: birthDate1FocusNode,
-                  hintText: 'YYYY',
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.text,
-                  onTap: () => setState(() {}),
+          InkWell(
+            onTap: () => _selectBirthdayDate(context),
+            child: Row(
+              children: [
+                Expanded(
+                  child: CustomTextField(
+                    textEditingController: birthDate1EditingController,
+                    focusNode: birthDate1FocusNode,
+                    hintText: 'YYYY',
+                    enabled: false,
+                    readOnly: true,
+                    hintColor: 0XFF000000,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.text,
+                    onTap: () => setState(() {}),
+                  ),
                 ),
-              ),
-              SizedBox(width: 7.w,),
-              Expanded(
-                child: CustomTextField(
-                  textEditingController: birthDate2EditingController,
-                  focusNode: birthDate2FocusNode,
-                  hintText: 'MM',
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.text,
-                  onTap: () => setState(() {}),
+                SizedBox(width: 7.w,),
+                Expanded(
+                  child: CustomTextField(
+                    textEditingController: birthDate2EditingController,
+                    focusNode: birthDate2FocusNode,
+                    enabled: false,
+                    readOnly: true,
+                    hintText: 'MM',
+                    hintColor: 0XFF000000,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.text,
+                    onTap: () => setState(() {}),
+                  ),
                 ),
-              ),
-              SizedBox(width: 7.w,),
-              Expanded(
-                child: CustomTextField(
-                  textEditingController: birthDate3EditingController,
-                  focusNode: birthDate3FocusNode,
-                  hintText: 'DD',
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.text,
-                  onTap: () => setState(() {}),
+                SizedBox(width: 7.w,),
+                Expanded(
+                  child: CustomTextField(
+                    textEditingController: birthDate3EditingController,
+                    focusNode: birthDate3FocusNode,
+                    hintText: 'DD',
+                    enabled: false,
+                    readOnly: true,
+                    hintColor: 0XFF000000,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.text,
+                    onTap: () => setState(() {}),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           SizedBox(
             height: 16.h,
@@ -298,10 +316,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
             height: 32.h,
           ),
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 80.w),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const VerificationCode(),));
+            padding:  EdgeInsets.symmetric(horizontal: tapped?150.w:80.w),
+            child: tapped?CircularProgressIndicator():ElevatedButton(
+              onPressed: () async{
+                setState(() {
+                  tapped = true;
+                });
+                await _performSignUp();
+                setState(() {
+                  tapped = false;
+                });
               },
               style: ElevatedButton.styleFrom(
                 maximumSize: Size(178.w, 40.h),
@@ -339,4 +363,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+  Future<void> _selectBirthdayDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900, 1, 1),
+      lastDate: DateTime.now(),
+    );
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      setState(() {
+        birthDate1EditingController.text = formattedDate.split('-')[0];
+        birthDate2EditingController.text = formattedDate.split('-')[1];
+        birthDate3EditingController.text = formattedDate.split('-')[2];
+        _selectedDate=formattedDate;
+      });
+    }
+  }
+
+  Future<void> _performSignUp() async {
+    if (_checkData()) {
+      await _signUp();
+    }
+  }
+
+  bool _checkData() {
+    if (nameEditingController.text.isNotEmpty &&
+        birthDate1EditingController.text.isNotEmpty &&
+        birthDate2EditingController.text.isNotEmpty &&
+        birthDate3EditingController.text.isNotEmpty &&
+        emailEditingController.text.isNotEmpty &&
+        passwordEditingController.text.isNotEmpty &&
+        passwordConfirmEditingController.text.isNotEmpty&&
+        _selectedDate !=null) {
+      return true;
+    }
+    context.showSnackBar(message: 'Enter Required Data', error: true);
+    return false;
+  }
+
+  Future<void> _signUp() async {
+    ApiResponse apiResponse = await AuthApiController().register(name: nameEditingController.text, email: emailEditingController.text, password: passwordEditingController.text,confirmPassword: passwordConfirmEditingController.text,date: _selectedDate!, phone: phoneEditingController.text);
+    if(apiResponse.success){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  VerificationCode(email: emailEditingController.text),));
+      context.showSnackBar(message: apiResponse.message);
+    }else{
+      context.showSnackBar(message: apiResponse.message,error: !apiResponse.success);
+    }
+
+  }
+
+
 }

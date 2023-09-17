@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pick_up/api_controller/content_api_controller.dart';
 import 'package:pick_up/screens/auth_screen/payment_option_screen.dart';
 
 class CheckOutScreen extends StatefulWidget {
-  const CheckOutScreen({Key? key}) : super(key: key);
+  const CheckOutScreen({required this.supId,Key? key}) : super(key: key);
+  final int supId;
 
   @override
   State<CheckOutScreen> createState() => _CheckOutScreenState();
@@ -26,62 +28,81 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             height: 85.42.h,
           ),
           SizedBox(height: 35.h,),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 22.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8.r),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x3FC4C4C4),
-                  blurRadius: 12,
-                  offset: Offset(0, 3),
-                  spreadRadius: 0,
-                )
-              ],
-            ),
+          FutureBuilder(
+            future: ContentApiController().getSubscriptionInfo(id: widget.supId),
+            builder: (context, snapshot) {
+            if(snapshot.connectionState == ConnectionState.waiting){
+              return Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: 50.h,),
+                    CircularProgressIndicator()
+                  ],
+                ),
+              );
+            }else if(snapshot.hasData&&snapshot.data != null){
+              var info = snapshot.data!;
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 22.h),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.r),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x3FC4C4C4),
+                      blurRadius: 12,
+                      offset: Offset(0, 3),
+                      spreadRadius: 0,
+                    )
+                  ],
+                ),
 
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset('images/allGyms.svg',width: 96.w,height: 49.82.h,),
-                SizedBox(height: 8.h,),
-                Text(
-                  'Jeem Name',
-                  style: GoogleFonts.tajawal(
-                    color: Colors.black,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w400,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('images/allGyms.svg',width: 96.w,height: 49.82.h,),
+                    SizedBox(height: 8.h,),
+                    Text(
+                      info.gym??'',
+                      style: GoogleFonts.tajawal(
+                        color: Colors.black,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    SizedBox(height: 8.h,),
+                    Text(
+                      '${info.price} SAR',
+                      style: GoogleFonts.tajawal(
+                        color: Color(0xFFFF8D2A),
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 8.h,),
+                    Text(
+                      '${info.month} months ',
+                      style: GoogleFonts.tajawal(
+                        color: Colors.black,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  ],
                 ),
-                SizedBox(height: 8.h,),
-                Text(
-                  '1500 SAR',
-                  style: GoogleFonts.tajawal(
-                    color: Color(0xFFFF8D2A),
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                SizedBox(height: 8.h,),
-                Text(
-                  '3 months ',
-                  style: GoogleFonts.tajawal(
-                    color: Colors.black,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                )
-              ],
-            ),
-          ),
+              );
+            }else{
+              return SizedBox();
+            }
+          },),
+
           SizedBox(height: 32.h,),
           Padding(
             padding:  EdgeInsets.symmetric(horizontal: 20.w),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PaymentOptionScreen(),));
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PaymentOptionScreen(supId: widget.supId),));
               },
               style: ElevatedButton.styleFrom(
                 maximumSize: Size(150.w, 40.h),

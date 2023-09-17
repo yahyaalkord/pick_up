@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pick_up/prefs/shared_pref_controller.dart';
 import 'package:pick_up/screens/splash_screen.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPrefController().initPref();
   runApp(const MyApp());
 }
 

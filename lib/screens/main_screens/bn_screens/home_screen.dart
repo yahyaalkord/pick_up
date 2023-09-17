@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pick_up/api_controller/auth_api_controller.dart';
+import 'package:pick_up/api_controller/content_api_controller.dart';
+import 'package:pick_up/screens/auth_screen/login_screen.dart';
+import 'package:pick_up/utils/api_response.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,9 +20,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: Column(
+      child: ListView(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         children: [
-
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: Text(
@@ -31,44 +36,68 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          /*Row(
+            children: [
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  'Hi, Mohammed',
+                  textAlign: TextAlign.start,
+                  style: GoogleFonts.tajawal(
+                    color: const Color(0xFF242D68),
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Spacer(),
+              IconButton(onPressed: () async{
+                bool apiResponse =  await AuthApiController().logout();
+                if(apiResponse){
+                  print('555');
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LogInScreen(),), (route) => false);
+                }
+              }, icon: Icon(Icons.logout)),
+            ],
+          ),*/
           SizedBox(
             height: 20.h,
           ),
           EasyDateTimeLine(
             initialDate: DateTime.now(),
-            headerProps: EasyHeaderProps(
+            headerProps: const EasyHeaderProps(
               padding: EdgeInsets.zero,
             ),
-            activeColor: Color(0xFF97C7FF),
+            activeColor: const Color(0xFF97C7FF),
             dayProps: EasyDayProps(
                 height: 80.h,
                 width: 60.w,
-                todayHighlightColor: Color(0xFF97C7FF),
+                todayHighlightColor: const Color(0xFF97C7FF),
                 borderColor: Colors.transparent,
                 activeDayNumStyle: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 15.sp),
-                activeDayStrStyle: TextStyle(
+                activeDayStrStyle: const TextStyle(
                   color: Colors.white,
                 ),
-                activeMothStrStyle: TextStyle(
+                activeMothStrStyle: const TextStyle(
                   color: Colors.white,
                 ),
               inactiveDayNumStyle: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 14.sp,
-                color: Color(0xFF929292),
+                color: const Color(0xFF929292),
               ),
               inactiveDayStrStyle: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 14.sp,
-                color: Color(0xFF929292),
+                color: const Color(0xFF929292),
               ),
               inactiveMothStrStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 14.sp,
-                color: Color(0xFF929292),
+                color: const Color(0xFF929292),
               )
 
             ),
@@ -94,86 +123,112 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 10.h,
           ),
-          Container(
-            padding: EdgeInsetsDirectional.only(top: 22.h,bottom: 17.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.r),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0x3FC4C4C4),
-                  blurRadius: 14.r,
-                  offset: Offset(0, 3),
-                  spreadRadius: 0,
-                )
-              ],
-            ),
-            child: Column(
-              children: [
-                SvgPicture.asset('images/allGyms.svg',width: 96.w,height: 49.82.h,),
-                SizedBox(
-                  height: 8.h,
-                ),
-                Text(
-                  'Jeem Name',
-                  style: GoogleFonts.tajawal(
-                    color: Colors.black,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w400,
+          FutureBuilder(
+            future: ContentApiController().getHomeData(),
+            builder: (context, snapshot) {
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return Center(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 50.h,),
+                      CircularProgressIndicator()
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 8.h,
-                ),
-                Text(
-                  '1500 SAR',
-                  style: GoogleFonts.tajawal(
-                    color: Color(0xFFFF8D2A),
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                SizedBox(
-                  height: 8.h,
-                ),
-                Text(
-                  '3 months ',
-                  style: GoogleFonts.tajawal(
-                    color: Colors.black,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(
-                  height: 9.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'End date:',
-                      style: GoogleFonts.tajawal(
-                        color: Colors.black,
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
+                );
+              }else if(snapshot.hasData&&snapshot.data != null){
+                var info = snapshot.data!;
+                return ListView.separated(
+                  shrinkWrap:true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                  return Container(
+                    padding: EdgeInsetsDirectional.only(top: 22.h,bottom: 17.h),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0x3FC4C4C4),
+                          blurRadius: 14.r,
+                          offset: const Offset(0, 3),
+                          spreadRadius: 0,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      width: 4.w,
+                    child: Column(
+                      children: [
+                        SvgPicture.asset('images/allGyms.svg',width: 96.w,height: 49.82.h,),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Text(
+                          info[index].subscription!.name??'',
+                          style: GoogleFonts.tajawal(
+                            color: Colors.black,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Text(
+                          '${info[index].subscription!.price} SAR',
+                          style: GoogleFonts.tajawal(
+                            color: const Color(0xFFFF8D2A),
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Text(
+                          '${info[index].subscription!.noOfMonths} months ',
+                          style: GoogleFonts.tajawal(
+                            color: Colors.black,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 9.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'End date:',
+                              style: GoogleFonts.tajawal(
+                                color: Colors.black,
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 4.w,
+                            ),
+                            Text(
+                              info[index].subscription!.endDate??'',
+                              style: GoogleFonts.tajawal(
+                                color: const Color(0xFFFF0000),
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
                     ),
-                    Text(
-                      '4/11/2023',
-                      style: GoogleFonts.tajawal(
-                        color: Color(0xFFFF0000),
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          )
+                  );
+                }, separatorBuilder: (context, index) {
+                  return SizedBox(height: 16.h,);
+                }, itemCount: info.length);
+              }else{
+                return SizedBox();
+              }
+            },),
+
         ],
       ),
     );
