@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pick_up/get/content_get_controller.dart';
@@ -20,6 +21,11 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   void initState() {
     controller.readSubscription(id: widget.gymId);
     super.initState();
+  }
+  @override
+  void dispose() {
+    Get.delete<ContentGetxController>(force: true);
+    super.dispose();
   }
   int? selectItem;
   int? selectItemId;
@@ -181,7 +187,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if(selectItemId != null){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOutScreen(supId: selectItemId!,),));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CheckOutScreen(supId: selectItemId!,),));
                 }else{
                   context.showSnackBar(message: 'Please select a subscription plan',error: true);
 

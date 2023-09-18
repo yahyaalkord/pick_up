@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pick_up/model/store_subscriptio_model.dart';
 import 'package:pick_up/prefs/shared_pref_controller.dart';
+import 'package:pick_up/screens/auth_screen/login_screen.dart';
 import 'package:pick_up/screens/main_screens/bn_screen.dart';
 
 class DoneScreen extends StatefulWidget {
@@ -96,7 +97,7 @@ class _DoneScreenState extends State<DoneScreen> {
           ),
           SizedBox(height: 62.h,),
           InkWell(
-            onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigationBarScreen(),)),
+            onTap: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LogInScreen(),), (route) => false),
             child: Container(
               width: 244.w,
               height: 102.h,

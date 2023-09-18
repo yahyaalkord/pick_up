@@ -54,7 +54,7 @@ class _AllTrainersScreenState extends State<AllTrainersScreen> {
                   child: Column(
                     children: [
                       SizedBox(height: 50.h,),
-                      CircularProgressIndicator()
+                      const CircularProgressIndicator()
                     ],
                   ),
                 );
@@ -137,7 +137,7 @@ class _AllTrainersScreenState extends State<AllTrainersScreen> {
                       );
                     }, separatorBuilder: (context, index) => SizedBox(height: 16.h,), itemCount: trainer.length);
               }else{
-                return SizedBox();
+                return const SizedBox();
               }
             },),
           SizedBox(height: 32.h,),

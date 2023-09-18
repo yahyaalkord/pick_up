@@ -108,7 +108,7 @@ class _VerificationCodeState extends State<VerificationCode> {
                   child: Container(
                     width: 66.w,
                     decoration: BoxDecoration(
-                      color: Color(0XFFFAFBFF),
+                      color: const Color(0XFFFAFBFF),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: TextField(
@@ -116,7 +116,7 @@ class _VerificationCodeState extends State<VerificationCode> {
                       focusNode: _firstNode,
                       keyboardType: TextInputType.number,
                       maxLength: 1,
-                      cursorColor: Color(0XFFFF8D2A),
+                      cursorColor: const Color(0XFFFF8D2A),
                       textAlign: TextAlign.center,
                       onChanged: (String value) {
                         if(value.isNotEmpty)
@@ -151,7 +151,7 @@ class _VerificationCodeState extends State<VerificationCode> {
                   child: Container(
                     width: 66.w,
                     decoration: BoxDecoration(
-                      color: Color(0XFFFAFBFF),
+                      color: const Color(0XFFFAFBFF),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: TextField(
@@ -163,7 +163,7 @@ class _VerificationCodeState extends State<VerificationCode> {
                       onChanged: (String value) {
                         value.isNotEmpty?_thirdNode.requestFocus():_firstNode.requestFocus();
                       },
-                      cursorColor: Color(0XFFFF8D2A),
+                      cursorColor: const Color(0XFFFF8D2A),
                       decoration: InputDecoration(
                         counterText: '',
                         enabledBorder: OutlineInputBorder(
@@ -192,7 +192,7 @@ class _VerificationCodeState extends State<VerificationCode> {
                   child: Container(
                     width: 66.w,
                     decoration: BoxDecoration(
-                      color: Color(0XFFFAFBFF),
+                      color: const Color(0XFFFAFBFF),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: TextField(
@@ -204,7 +204,7 @@ class _VerificationCodeState extends State<VerificationCode> {
                       onChanged: (String value) {
                         value.isNotEmpty? _fourthNode.requestFocus():_secondNode.requestFocus();
                       },
-                      cursorColor: Color(0XFFFF8D2A),
+                      cursorColor: const Color(0XFFFF8D2A),
                       decoration: InputDecoration(
                         counterText: '',
                         enabledBorder: OutlineInputBorder(
@@ -233,7 +233,7 @@ class _VerificationCodeState extends State<VerificationCode> {
                   child: Container(
                     width: 66.w,
                     decoration: BoxDecoration(
-                      color: Color(0XFFFAFBFF),
+                      color: const Color(0XFFFAFBFF),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: TextField(
@@ -245,7 +245,7 @@ class _VerificationCodeState extends State<VerificationCode> {
                       onChanged: (String value) {
                         value.isNotEmpty ? _fifthNode.requestFocus():_thirdNode.requestFocus();
                       },
-                      cursorColor: Color(0XFFFF8D2A),
+                      cursorColor: const Color(0XFFFF8D2A),
                       decoration: InputDecoration(
                         counterText: '',
                         enabledBorder: OutlineInputBorder(
@@ -279,11 +279,11 @@ class _VerificationCodeState extends State<VerificationCode> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.tajawal(
                     fontSize: 13.sp,
-                    color: Color(0xFFA7A9B7),
+                    color: const Color(0xFFA7A9B7),
                   ),
                 ):TimerWidget()),
             SizedBox(height: 39.h,),
-            tapped?CircularProgressIndicator():ElevatedButton(
+            tapped?const CircularProgressIndicator():ElevatedButton(
               onPressed: () async{
                 {
                   setState(() {
@@ -398,12 +398,8 @@ class _VerificationCodeState extends State<VerificationCode> {
     );
     if (apiResponse.success) {
       context.showSnackBar(message: apiResponse.message);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LogInScreen(),
-        ),
-      );
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>  LogInScreen(),), (route) => false);
+
     }else{
       context.showSnackBar(message: apiResponse.message,error: !apiResponse.success);
     }
