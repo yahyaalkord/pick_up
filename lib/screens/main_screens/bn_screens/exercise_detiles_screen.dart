@@ -113,7 +113,7 @@ class _ExerciseDetilesScreenState extends State<ExerciseDetilesScreen> {
                         ),
                       ),
                       child: Text(
-                        widget.exercisesModel.workout??'',
+                        '${widget.exercisesModel.workout??''} workout',
                         style: GoogleFonts.tajawal(
                           color: const Color(0xFF242D68),
                           fontSize: 13.sp,

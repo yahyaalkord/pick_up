@@ -5,7 +5,7 @@ class ExercisesModel {
   String? shortDescription;
   String? longDescription;
   String? minutes;
-  String? workout;
+  int? workout;
   String? imageUrl;
 
   ExercisesModel();
