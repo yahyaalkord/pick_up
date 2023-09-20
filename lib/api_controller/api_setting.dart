@@ -1,5 +1,5 @@
 class ApiSettings {
-  static const _baseUrl='https://pickup.tmooh-dev.com/api/';
+  static const _baseUrl='https://pickup.main-dev.tech/api/';
   static const login=_baseUrl+'auth/login';
   static const register=_baseUrl+'auth/register';
   static const verifyCode=_baseUrl+'auth/verifyCode';

@@ -10,7 +10,6 @@ class AuthApiController {
   Future<ApiResponse> login(
       {required String email,
         required String password}) async {
-    print('in login first');
     var url = Uri.parse(ApiSettings.login);
     var response = await http.post(url,
         body: {
@@ -20,7 +19,6 @@ class AuthApiController {
         headers: {
           HttpHeaders.acceptHeader: 'application/json',
         });
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var baseApiResponse = User.fromJson(json['data']);
@@ -42,7 +40,6 @@ class AuthApiController {
       HttpHeaders.acceptHeader: 'application/json',
     });
     if (response.statusCode == 200) {
-      print(222);
       SharedPrefController().clear();
       return true;
     }else{

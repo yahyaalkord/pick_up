@@ -44,11 +44,6 @@ class _VerificationCodeState extends State<VerificationCode> {
     _third = TextEditingController();
     _fourth = TextEditingController();
     _fifth = TextEditingController();
-    Future.delayed(const Duration(seconds: 60),(){
-      setState(() {
-        resendCode= true;
-      });
-    });
   }
 
   @override
@@ -93,7 +88,7 @@ class _VerificationCodeState extends State<VerificationCode> {
             ),
             SizedBox(height: 8.h,),
             Text(
-              'Please check your Phone number, Enter the 4-digit code',
+              'Please check your Email Address, Enter the 4-digit code',
               textAlign: TextAlign.center,
               style: GoogleFonts.tajawal(
                 color: Colors.black,
@@ -391,7 +386,6 @@ class _VerificationCodeState extends State<VerificationCode> {
 
 
   Future<void> forgetPassword() async {
-    print('in forget enter');
     ApiResponse apiResponse = await AuthApiController().checkCode(
       code: _first.text + _second.text + _third.text + _fourth.text,
       email: widget.email,

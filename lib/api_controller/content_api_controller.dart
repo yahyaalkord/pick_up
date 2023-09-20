@@ -35,6 +35,7 @@ class ContentApiController with ApiHelpers {
   Future<List<AllTrainersModel>> getAllTrainer({required int id}) async {
     Uri uri = Uri.parse(ApiSettings.allTrainer.replaceFirst('{id}', id.toString()));
     var response = await http.get(uri,headers: headers);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       var dataJsonObject = json['data'] as List;

@@ -18,6 +18,7 @@ class _AllTrainersScreenState extends State<AllTrainersScreen> {
   ContentGetxController controller = ContentGetxController.to;
   @override
   void initState() {
+    print(widget.gymId);
     controller.readTrainers(id: widget.gymId);
     super.initState();
   }

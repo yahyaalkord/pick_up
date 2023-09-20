@@ -44,10 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.zero,
                   constraints: BoxConstraints(),
                   onPressed: () async{
-                    print('000');
                 bool apiResponse =  await AuthApiController().logout();
                 if(apiResponse == true){
-                  print('555');
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LogInScreen(),), (route) => false);
                 }
               }, icon: Icon(Icons.logout)),
